@@ -17,12 +17,17 @@ class TicketRepository
             return null;
         }
         $source = pg_fetch_assoc(query('SELECT id, name FROM sources WHERE id=$1', array($row['source_id'])));
+
+        $sourceData = $source ?
+            array('id' => (int) $source['id'], 'name' => $source['name']) :
+            null;
+
         return array(
             'id' => (int) $row['id'],
             'title' => $row['title'],
             'description' => $row['description'],
             'status' => $row['status'],
-            'source' => array('id' => (int) $source['id'], 'name' => $source['name']),
+            'source' => $sourceData,
             'updated_at' => $row['updated_at'],
         );
     }
@@ -50,6 +55,10 @@ class TicketRepository
 
     public function changeSource($id, $sourceId, array $employee)
     {
+        if ($employee['role'] !== 'editor') {
+            respond(403, array('error' => 'forbidden', 'message' => 'Нет прав для редактирования источника'));
+        }
+
         $ticket = pg_fetch_assoc(query('SELECT source_id FROM tickets WHERE id=$1', array($id)));
         if (!$ticket) {
             respond(404, array('error' => 'not_found', 'message' => 'Заявка не найдена'));

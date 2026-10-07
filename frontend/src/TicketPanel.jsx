@@ -50,7 +50,7 @@ export default function TicketPanel({ employee, selectedId, sources, onChanged }
     {!selectedId && <div className="empty"><h2>Выберите заявку</h2><p>Карточка и история изменений появятся здесь.</p></div>}
     {selectedId && loading && <p role="status" className="muted">Загрузка карточки…</p>}
     {error && <p className="error" role="alert">{error}</p>}
-    {selectedId && !loading && ticket && <>
+    {selectedId && !loading && ticket && !error && <>
       <div className="panel-heading"><span className="muted">Заявка #{ticket.id}</span><h2>{ticket.title}</h2><p>{ticket.description}</p></div>
       <div className="source-box"><label htmlFor="source">Источник заявки</label>
         {canEdit ? <div className="source-controls"><select id="source" value={sourceId} onChange={event => setSourceId(event.target.value)} disabled={saving}><option value="" disabled>Выберите источник</option>{sources.map(source => <option key={source.id} value={source.id}>{source.name}</option>)}</select><button onClick={save} disabled={saving || !sourceId}>{saving ? 'Сохранение…' : 'Сохранить'}</button></div> : <p>{ticket.source?.name ?? 'Не указан'}</p>}
