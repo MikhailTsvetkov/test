@@ -61,6 +61,31 @@ function query($sql, array $params = array())
     return $result;
 }
 
+function transaction(callable $callback)
+{
+    $connection = db();
+
+    if (!pg_query($connection, 'BEGIN')) {
+        error_log(pg_last_error(db()));
+        throw new RuntimeException('Failed to begin transaction');
+    }
+
+    try {
+        $result = $callback();
+
+        if (!pg_query($connection, 'COMMIT')) {
+            error_log(pg_last_error(db()));
+            throw new RuntimeException('Failed to commit transaction');
+        }
+
+        return $result;
+    } catch (Throwable $e) {
+        pg_query($connection, 'ROLLBACK');
+
+        throw $e;
+    }
+}
+
 function currentEmployee()
 {
     if (empty($_SESSION['employee_id'])) {

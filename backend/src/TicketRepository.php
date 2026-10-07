@@ -79,8 +79,18 @@ class TicketRepository
             respond(403, array('error' => 'forbidden', 'message' => 'Архивная заявка доступна только для чтения'));
         }
 
-        query('UPDATE tickets SET source_id=$1, updated_at=clock_timestamp() WHERE id=$2', array($sourceId, $id));
-        query('INSERT INTO ticket_history(ticket_id, employee_id, old_source_id, new_source_id) VALUES($1,$2,$3,$4)', array($id, $employee['id'], $ticket['source_id'], $sourceId));
+        transaction(function () use ($id, $sourceId, $ticket, $employee) {
+            query(
+                'UPDATE tickets SET source_id=$1, updated_at=clock_timestamp() WHERE id=$2',
+                array($sourceId, $id),
+            );
+
+            query(
+                'INSERT INTO ticket_history(ticket_id, employee_id, old_source_id, new_source_id) VALUES ($1, $2, $3, $4)',
+                array($id, $employee['id'], $ticket['source_id'], $sourceId),
+            );
+        });
+
         return $this->find($id);
     }
 }
