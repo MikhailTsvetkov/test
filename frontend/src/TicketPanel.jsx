@@ -53,7 +53,7 @@ export default function TicketPanel({ employee, selectedId, sources, onChanged }
     {selectedId && !loading && ticket && !error && <>
       <div className="panel-heading"><span className="muted">Заявка #{ticket.id}</span><h2>{ticket.title}</h2><p>{ticket.description}</p></div>
       <div className="source-box"><label htmlFor="source">Источник заявки</label>
-        {canEdit ? <div className="source-controls"><select id="source" value={sourceId} onChange={event => setSourceId(event.target.value)} disabled={saving}><option value="" disabled>Выберите источник</option>{sources.map(source => <option key={source.id} value={source.id}>{source.name}</option>)}</select><button onClick={save} disabled={saving || !sourceId}>{saving ? 'Сохранение…' : 'Сохранить'}</button></div> : <p>{ticket.source?.name ?? 'Не указан'}</p>}
+        {canEdit ? <div className="source-controls"><select id="source" value={sourceId} onChange={event => setSourceId(event.target.value)} disabled={saving}><option value="" disabled>Не указан</option>{sources.map(source => <option key={source.id} value={source.id}>{source.name}</option>)}</select><button onClick={save} disabled={saving || !sourceId}>{saving ? 'Сохранение…' : 'Сохранить'}</button></div> : <p>{ticket.source?.name ?? 'Не указан'}</p>}
         {ticket.status === 'archived' && <p className="muted">Архивная заявка доступна только для чтения.</p>}
         {message && <p className="success" role="status">{message}</p>}
       </div>
