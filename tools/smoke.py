@@ -22,6 +22,8 @@ try:
     assert len(request('/sources')['sources']) >= 3
     detail = request('/tickets/102')
     assert detail['ticket']['id'] == 102 and detail['ticket']['source']['id'] == 2
+    detail = request('/tickets/103')
+    assert detail['ticket']['source'] is None
     print('PASS: PHP 7.4, isolated database, session, list, sources, normal ticket')
 except (AssertionError, OSError, ValueError) as error:
     print('FAIL:', str(error), file=sys.stderr)
