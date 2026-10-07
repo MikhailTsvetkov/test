@@ -1,8 +1,17 @@
 <?php
 class TicketRepository
 {
-    public function all()
+    public function all(array $employee)
     {
+        $accessCheck = pg_fetch_assoc(query(
+            'SELECT 1 FROM employee_functions WHERE employee_id=$1 AND function_name=$2',
+            array($employee['id'], 'FUNC_TICKETS_VIEWo'),
+        ));
+
+        if (!$accessCheck) {
+            respond(403, array('error' => 'forbidden', 'message' => 'У вас нет доступа к просмотру этой страницы'));
+        }
+
         $rows = pg_fetch_all(query('SELECT t.id, t.title, t.status, s.name AS source_name FROM tickets t LEFT JOIN sources s ON s.id=t.source_id ORDER BY t.id')) ?: array();
         foreach ($rows as &$row) {
             $row['id'] = (int) $row['id'];

@@ -30,7 +30,7 @@ requirePermission($employee, 'FUNC_TICKETS_VIEW');
 $repository = new TicketRepository();
 
 if ($path === '/api/tickets' && $method === 'GET') {
-    respond(200, array('tickets' => $repository->all()));
+    respond(200, array('tickets' => $repository->all($employee)));
 }
 if ($path === '/api/sources' && $method === 'GET') {
     respond(200, array('sources' => $repository->sources()));

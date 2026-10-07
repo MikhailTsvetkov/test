@@ -70,7 +70,7 @@ export default function App() {
         </div>
       </header>
       {error && <p className="error" role="alert">{error}</p>}
-      {!employee ? <section className="welcome"><h1>Заявки сервисной службы</h1><p>Выберите учебную роль и войдите.</p><p>Все сотрудники, адреса и заявки в этом проекте вымышлены.</p></section> : <>
+      {!error && (!employee ? <section className="welcome"><h1>Заявки сервисной службы</h1><p>Выберите учебную роль и войдите.</p><p>Все сотрудники, адреса и заявки в этом проекте вымышлены.</p></section> : <>
         <div className="page-heading"><div><h1>Заявки сервисной службы</h1><p>{employee.name} · {employee.role === 'editor' ? 'Редактирование источника' : 'Только просмотр'}</p></div><span className="badge">{tickets.length} заявок</span></div>
         <div className="workspace">
           <section className="ticket-list" aria-label="Список заявок">
@@ -82,7 +82,7 @@ export default function App() {
           </section>
           <TicketPanel employee={employee} selectedId={selectedId} sources={sources} onChanged={ticketChanged} />
         </div>
-      </>}
+      </>)}
     </main>
   );
 }
