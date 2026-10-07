@@ -59,10 +59,6 @@ class TicketRepository
             respond(403, array('error' => 'forbidden', 'message' => 'Нет прав для редактирования источника'));
         }
 
-        if (!preg_match('/^[1-9]\d*$/', $sourceId)) {
-            respond(400, array('error' => 'invalid_source', 'message' => 'Передан некорректный источник'));
-        }
-
         $ticket = pg_fetch_assoc(query('SELECT source_id, status FROM tickets WHERE id=$1', array($id)));
         if (!$ticket) {
             respond(404, array('error' => 'not_found', 'message' => 'Заявка не найдена'));
@@ -77,6 +73,10 @@ class TicketRepository
 
         if ($ticket['status'] === 'archived') {
             respond(403, array('error' => 'forbidden', 'message' => 'Архивная заявка доступна только для чтения'));
+        }
+
+        if (!preg_match('/^[1-9]\d*$/', $sourceId)) {
+            respond(400, array('error' => 'invalid_source', 'message' => 'Передан некорректный источник'));
         }
 
         transaction(function () use ($id, $sourceId, $ticket, $employee) {
