@@ -5,7 +5,7 @@ class TicketRepository
     {
         $accessCheck = pg_fetch_assoc(query(
             'SELECT 1 FROM employee_functions WHERE employee_id=$1 AND function_name=$2',
-            array($employee['id'], 'FUNC_TICKETS_VIEWo'),
+            array($employee['id'], 'FUNC_TICKETS_VIEW'),
         ));
 
         if (!$accessCheck) {
