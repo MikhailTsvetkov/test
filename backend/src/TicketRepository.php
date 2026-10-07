@@ -53,10 +53,14 @@ class TicketRepository
         return $rows;
     }
 
-    public function changeSource($id, $sourceId, array $employee)
+    public function changeSource($id, string $sourceId, array $employee)
     {
         if ($employee['role'] !== 'editor') {
             respond(403, array('error' => 'forbidden', 'message' => 'Нет прав для редактирования источника'));
+        }
+
+        if (!preg_match('/^[1-9]\d*$/', $sourceId)) {
+            respond(400, array('error' => 'invalid_source', 'message' => 'Передан некорректный источник'));
         }
 
         $ticket = pg_fetch_assoc(query('SELECT source_id, status FROM tickets WHERE id=$1', array($id)));
