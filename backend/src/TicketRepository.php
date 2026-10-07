@@ -71,6 +71,10 @@ class TicketRepository
             respond(400, array('error' => 'invalid_source', 'message' => 'Источник не найден'));
         }
 
+        if ($ticket['source_id'] === $sourceId) {
+            return $this->find($id);
+        }
+
         if ($ticket['status'] === 'archived') {
             respond(403, array('error' => 'forbidden', 'message' => 'Архивная заявка доступна только для чтения'));
         }
